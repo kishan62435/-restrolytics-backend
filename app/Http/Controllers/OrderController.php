@@ -44,10 +44,10 @@ class OrderController extends Controller
                 $query->where('order_amount', '<=', $maxA);
             })
             ->when($hFrom, function ($query) use ($hFrom) {
-                $query->whereRaw('TIME(order_time) >= ?', [$hFrom]);
+                $query->whereRaw('EXTRACT(TIME FROM order_time) >= ?', [$hFrom]);
             })
             ->when($hTo, function ($query) use ($hTo) {
-                $query->whereRaw('TIME(order_time) <= ?', [$hTo]);
+                $query->whereRaw('EXTRACT(TIME FROM order_time) <= ?', [$hTo]);
             })
             ->orderBy('order_time', 'desc');
 

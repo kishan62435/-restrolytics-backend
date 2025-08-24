@@ -89,10 +89,10 @@ class AnalyticsController extends BaseApiController
                 $query->where('order_amount', '<=', $maxA);
             })
             ->when($hFrom, function ($query) use ($hFrom) {
-                $query->whereRaw('TIME(order_time) >= ?', [$hFrom]);
+                $query->whereRaw('EXTRACT(TIME FROM order_time) >= ?', [$hFrom]);
             })
             ->when($hTo, function ($query) use ($hTo) {
-                $query->whereRaw('TIME(order_time) <= ?', [$hTo]);
+                $query->whereRaw('EXTRACT(TIME FROM order_time) <= ?', [$hTo]);
             });
 
         // daily counts, order_amount_sum, average
@@ -100,8 +100,8 @@ class AnalyticsController extends BaseApiController
             ->select(
                 DB::raw('DATE(order_time) as date'),
                 DB::raw('COUNT(*) as count'),
-                DB::raw('SUM(order_amount) as amount_sum'),
-                DB::raw('AVG(order_amount) as average')
+                DB::raw('ROUND(SUM(order_amount)::numeric, 2) as amount_sum'),
+                DB::raw('ROUND(AVG(order_amount)::numeric, 2) as average')
             )
             ->groupBy('date')
             ->get();
@@ -111,10 +111,10 @@ class AnalyticsController extends BaseApiController
         // hourly counts, order_amount_sum, average
         $hourlyData = (clone $orders)
             ->select(
-                DB::raw('DATE_FORMAT(order_time, "%Y-%m-%d %H:00") as hour'),
+                DB::raw('TO_CHAR(order_time, \'YYYY-MM-DD HH24:00\') as hour'),
                 DB::raw('COUNT(*) as count'),
-                DB::raw('SUM(order_amount) as amount_sum'),
-                DB::raw('AVG(order_amount) as average')
+                DB::raw('ROUND(SUM(order_amount)::numeric, 2) as amount_sum'),
+                DB::raw('ROUND(AVG(order_amount)::numeric, 2) as average')
             )
             ->groupBy('hour')
             ->get();
