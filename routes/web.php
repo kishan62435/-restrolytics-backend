@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return 1;
-    // return view('welcome');
+    return response()->json(['message' => 'Order Trends API is running']);
+});
+
+Route::get('/health', function () {
+    return response()->json(['status' => 'healthy', 'timestamp' => now()]);
 });
