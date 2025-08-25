@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class OrderController extends Controller
 {
@@ -44,10 +45,10 @@ class OrderController extends Controller
                 $query->where('order_amount', '<=', $maxA);
             })
             ->when($hFrom, function ($query) use ($hFrom) {
-                $query->whereRaw('EXTRACT(TIME FROM order_time) >= ?', [$hFrom]);
+                $query->whereRaw('EXTRACT(HOUR FROM order_time) * 60 + EXTRACT(MINUTE FROM order_time) >= ?', [Carbon::parse($hFrom)->hour * 60 + Carbon::parse($hFrom)->minute]);
             })
             ->when($hTo, function ($query) use ($hTo) {
-                $query->whereRaw('EXTRACT(TIME FROM order_time) <= ?', [$hTo]);
+                $query->whereRaw('EXTRACT(HOUR FROM order_time) * 60 + EXTRACT(MINUTE FROM order_time) <= ?', [Carbon::parse($hTo)->hour * 60 + Carbon::parse($hTo)->minute]);
             })
             ->orderBy('order_time', 'desc');
 
