@@ -7,7 +7,8 @@ RUN apk add --no-cache \
     libzip-dev \
     oniguruma-dev \
     nginx \
-    supervisor
+    supervisor \
+    icu-dev
 
 # Install PHP extensions
 RUN docker-php-ext-install \
@@ -15,7 +16,8 @@ RUN docker-php-ext-install \
     pdo_pgsql \
     pgsql \
     mbstring \
-    zip
+    zip \
+    intl
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -39,7 +41,7 @@ RUN chmod +x /entrypoint.sh
 COPY . .
 
 # Copy environment file
-COPY .env.example .env
+# COPY .env.example .env
 
 # Create necessary directories and set permissions
 RUN mkdir -p /var/log/nginx \
