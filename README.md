@@ -1,5 +1,31 @@
 # 🍽️ RestroLytics Backend
 
+## 🏃 Run locally (Quick Start)
+
+```bash
+# 1) Install dependencies
+composer install
+
+# 2) Copy environment file
+# macOS/Linux (bash)
+cp .env.example .env
+# Windows (PowerShell)
+# copy .env.example .env
+
+# 3) Use SQLite for quick start (edit .env)
+DB_CONNECTION=sqlite
+DB_DATABASE=database/database.sqlite
+
+# 4) Generate app key and set up DB
+php artisan key:generate
+php artisan migrate --seed
+
+# 5) Start the server
+php artisan serve
+# App will be available at http://localhost:8000
+```
+
+
 A powerful Laravel-based REST API for restaurant analytics and order management. This backend provides comprehensive insights into restaurant performance, order trends, and revenue analytics with efficient caching and filtering capabilities.
 
 ## ✨ Features
